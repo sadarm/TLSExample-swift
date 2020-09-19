@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AD3759AC25159BA300A41681 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3759AB25159BA300A41681 /* main.swift */; };
+		AD3759E22515E4B400A41681 /* TLSProtocol.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD3759E12515E4B400A41681 /* TLSProtocol.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,7 @@
 /* Begin PBXFileReference section */
 		AD3759A825159BA300A41681 /* Client */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Client; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD3759AB25159BA300A41681 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		AD3759E12515E4B400A41681 /* TLSProtocol.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TLSProtocol.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD3759E22515E4B400A41681 /* TLSProtocol.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +46,7 @@
 			children = (
 				AD3759AA25159BA300A41681 /* Client */,
 				AD3759A925159BA300A41681 /* Products */,
+				AD3759E02515E4B400A41681 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,6 +64,14 @@
 				AD3759AB25159BA300A41681 /* main.swift */,
 			);
 			path = Client;
+			sourceTree = "<group>";
+		};
+		AD3759E02515E4B400A41681 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AD3759E12515E4B400A41681 /* TLSProtocol.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
