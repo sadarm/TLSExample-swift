@@ -82,6 +82,42 @@ public struct CompressionMethod {
     public static let NULL = CompressionMethod(rawValue: 0)
 }
 
+public enum HandshakeType: Int {
+    case hello_request = 0
+    case client_hello = 1
+    case server_hello = 2
+    case certificate = 11
+    case server_key_exchange = 12
+    case certificate_request = 13
+    case server_hello_done = 14
+    case certificate_verify = 15
+    case client_key_exchange = 16
+    case finished = 20
+}
+
+public struct Handshake {
+    let type: HandshakeType
+//    let length: UInt32
+    
+    public init(type: HandshakeType) {
+        self.type = type
+    }
+    
+    public func bytes(with clientHello: ClientHello) -> [UInt8] {
+        var buffer: [UInt8] = []
+        buffer.append(UInt8(self.type.rawValue))
+        let body = clientHello.bytes
+        var countOfBody = body.count
+        withUnsafeBytes(of: &countOfBody) { (count) -> Void in
+            buffer.append(count[2])
+            buffer.append(count[1])
+            buffer.append(count[0])
+        }
+        buffer.append(contentsOf: body)
+        return buffer
+    }
+}
+
 /*
  struct {
      ProtocolVersion client_version;
@@ -112,6 +148,22 @@ public struct ClientHello {
         self.cipherSuites = cipherSuites
         self.compressionMethod = compressionMethod
         self.extensions = extensions
+    }
+    
+    public var bytes: [UInt8] {
+        var buffer: [UInt8] = []
+        buffer.append(22)
+        buffer.append(self.clientVersion.major)
+        buffer.append(self.clientVersion.minor)
+        var random = self.random
+        withUnsafeBytes(of: &random.gmt_unix_time) { (random) -> Void in
+            buffer.append(random[3])
+            buffer.append(random[2])
+            buffer.append(random[1])
+            buffer.append(random[0])
+        }
+        buffer.append(contentsOf: random.random_bytes)
+        return buffer
     }
 };
 
