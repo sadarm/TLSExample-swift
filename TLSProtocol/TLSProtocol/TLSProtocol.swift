@@ -22,8 +22,16 @@ public struct ProtocolVersion {
 }
 
 public struct Random {
-    public var gmt_unix_time: uint32
+    public var gmt_unix_time: UInt32
     public var random_bytes: [UInt8] = [UInt8](repeating: 0, count: 28)
+    
+    public init() {
+        self.gmt_unix_time = UInt32(Date().timeIntervalSince1970)
+        var randomBytes: [UInt8] = [UInt8](repeating: 0, count: 28)
+        let result = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
+        assert(result == errSecSuccess)
+        self.random_bytes = randomBytes
+    }
 }
 
 
