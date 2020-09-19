@@ -31,6 +31,7 @@ while let addrPointer = hostent.h_addr_list[i] {
 }
 
 assert(!addrs.isEmpty, "Error getting in_addr from hostname")
+print(String(format: "host ip: %s", inet_ntoa(addrs[0])))
 
 var serverAddr = sockaddr_in(sin_len: UInt8(MemoryLayout<sockaddr_in>.size),
                              sin_family: UInt8(hostent.h_addrtype),
@@ -45,3 +46,17 @@ let result = withUnsafePointer(to: &serverAddr) { (pointer) -> Int32 in
 
 assert(-1 != result, "Error connecting to host: " + POSIXErrorCode(rawValue: errno).debugDescription)
 
+var hello = ClientHello(ProtocolVersion.TLS_1_2,
+                        Random(),
+                        nil,
+                        [CipherSuite.TLS_DH_RSA_WITH_AES_128_CBC_SHA256],
+                        CompressionMethod.NULL,
+                        [])
+
+var handshake = Handshake(type: .client_hello).bytes(with: hello)
+let countOfSentBytes = send(fd, &handshake, handshake.count, 0)
+print("\(countOfSentBytes)")
+
+var buffer: [UInt8] = .init(repeating: 0, count: 4096)
+let countOfReadBytes = read(fd, &buffer, buffer.count)
+print("\(countOfReadBytes)")
