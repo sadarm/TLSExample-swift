@@ -49,12 +49,31 @@ assert(-1 != result, "Error connecting to host: " + POSIXErrorCode(rawValue: err
 var hello = ClientHello(ProtocolVersion.TLS_1_2,
                         Random(),
                         nil,
-                        [CipherSuite.TLS_DH_RSA_WITH_AES_128_CBC_SHA256],
-                        CompressionMethod.NULL,
-                        [])
+                        [.TLS_DH_anon_WITH_3DES_EDE_CBC_SHA,
+                         .TLS_DH_anon_WITH_AES_128_CBC_SHA,
+                         .TLS_DH_anon_WITH_AES_128_CBC_SHA256,
+                         .TLS_DH_anon_WITH_AES_256_CBC_SHA,
+                         .TLS_DH_anon_WITH_AES_256_CBC_SHA256,
+                         .TLS_DH_anon_WITH_RC4_128_MD5,
+                         .TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA,
+                         .TLS_DH_DSS_WITH_AES_128_CBC_SHA,
+                         .TLS_DH_DSS_WITH_AES_128_CBC_SHA256,
+                         .TLS_DH_DSS_WITH_AES_256_CBC_SHA,
+                         .TLS_DH_DSS_WITH_AES_256_CBC_SHA256,
+                         .TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA,
+                         .TLS_DH_RSA_WITH_AES_128_CBC_SHA,
+                         .TLS_DH_RSA_WITH_AES_128_CBC_SHA256,
+                         .TLS_DH_RSA_WITH_AES_256_CBC_SHA,
+                         .TLS_DH_RSA_WITH_AES_256_CBC_SHA256,
+                         .TLS_DHE_DSS_WITH_AES_256_CBC_SHA,
+                         .TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA],
+                        [CompressionMethod.NULL],
+                        [SignatureAlgorithms([SignatureAndHashAlgorithm(.sha256, .ecdsa),
+                        SignatureAndHashAlgorithm(.sha256, .rsa)])])
 
 var handshake = Handshake(type: .client_hello).bytes(with: hello)
-let countOfSentBytes = send(fd, &handshake, handshake.count, 0)
+var text = TLSPlaintext(type: .handshake, version: .TLS_1_0, fragment: handshake).bytes
+let countOfSentBytes = send(fd, &text, text.count, 0)
 print("\(countOfSentBytes)")
 
 var buffer: [UInt8] = .init(repeating: 0, count: 4096)
