@@ -85,10 +85,19 @@ public struct CompressionMethod {
 public struct ClientHello {
     public var clientVersion: ProtocolVersion
     public var random: Random
-    public var sessionID: SessionID
-    public var cipherSuites: [CipherSuite]
-    public var compressionMethods: CompressionMethod
-    public var extensions: [Extension]
+    public var sessionID: SessionID?
+    public var cipherSuites: [CipherSuite] = []
+    public var compressionMethod: CompressionMethod
+    public var extensions: [Extension] = []
+    
+    public init(_ clientVersion: ProtocolVersion, _ random: Random, _ sessionID: SessionID? = nil, _ cipherSuites: [CipherSuite], _ compressionMethod: CompressionMethod, _ extensions: [Extension]) {
+        self.clientVersion = clientVersion
+        self.random = random
+        self.sessionID = sessionID
+        self.cipherSuites = cipherSuites
+        self.compressionMethod = compressionMethod
+        self.extensions = extensions
+    }
 };
 
 /*
@@ -110,10 +119,19 @@ public struct ClientHello {
 public struct ServerHello {
     public var serverVersion: ProtocolVersion
     public var random: Random
-    public var session_id: SessionID
-    public var cipherSuites: [CipherSuite]
-    public var compressionMethods: CompressionMethod
-    public var extensions: [Extension]
+    public var sessionID: SessionID?
+    public var cipherSuites: [CipherSuite] = []
+    public var compressionMethod: CompressionMethod
+    public var extensions: [Extension] = []
+    
+    public init(_ serverVersion: ProtocolVersion, _ random: Random, _ sessionID: SessionID? = nil, _ cipherSuites: [CipherSuite], _ compressionMethod: CompressionMethod, _ extensions: [Extension]) {
+        self.serverVersion = serverVersion
+        self.random = random
+        self.sessionID = sessionID
+        self.cipherSuites = cipherSuites
+        self.compressionMethod = compressionMethod
+        self.extensions = extensions
+    }
 };
 
 
