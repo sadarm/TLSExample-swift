@@ -10,13 +10,13 @@ import Foundation
 
 //ProtocolVersion version = { 3, 3 };     /* TLS v1.2*/
 struct ProtocolVersion {
-    var major: uint8
-    var minor: uint8
+    var major: UInt8
+    var minor: UInt8
 }
 
 struct Random {
     var gmt_unix_time: uint32
-    var random_bytes: [uint8] = [uint8](repeating: 0, count: 28)
+    var random_bytes: [UInt8] = [UInt8](repeating: 0, count: 28)
 }
 
 
@@ -56,33 +56,90 @@ struct Random {
 //    opaque MAC[SecurityParameters.mac_length];
 //} GenericStreamCipher;
 
-struct CipherSuites {
-    var _1: CipherSuite
-    var _2: CipherSuite?
-    var _3: CipherSuite?
-    var _4: CipherSuite?
-    var _5: CipherSuite?
-    var _6: CipherSuite?
-    var _7: CipherSuite?
-    var _8: CipherSuite?
-    var _9: CipherSuite?
-    var _10: CipherSuite?
-    var _11: CipherSuite?
-    var _12: CipherSuite?
-    var _13: CipherSuite?
-    var _14: CipherSuite?
-    var _15: CipherSuite?
+
+typealias SessionID = String
+//typealias CompressionMethod = uint8
+//let CompressionMethod_NULL: CompressionMethod = 0
+
+struct CompressionMethod {
+    let rawValue: UInt8
+    
+    static let NULL = CompressionMethod(rawValue: 0)
 }
 
+/*
+ struct {
+     ProtocolVersion client_version;
+     Random random;
+     SessionID session_id;
+     CipherSuite cipher_suites<2..2^16-2>;
+     CompressionMethod compression_methods<1..2^8-1>;
+     select (extensions_present) {
+         case false:
+             struct {};
+         case true:
+             Extension extensions<0..2^16-1>;
+     };
+ } ClientHello;
+ */
 struct ClientHello {
     var clientVersion: ProtocolVersion
     var random: Random
-    var session_id: [uint8] = [uint8](repeating: 0, count: 32)
-    CompressionMethod compression_methods<1..2^8-1>;
-    select (extensions_present) {
-        case false:
-            struct {};
-        case true:
-            Extension extensions<0..2^16-1>;
-    };
+    var sessionID: SessionID
+    var cipherSuites: [CipherSuite]
+    var compressionMethods: CompressionMethod
+    var extensions: [Extension]
 };
+
+/*
+ struct {
+     ProtocolVersion server_version;
+     Random random;
+     SessionID session_id;
+     CipherSuite cipher_suite;
+     CompressionMethod compression_method;
+     select (extensions_present) {
+         case false:
+             struct {};
+         case true:
+             Extension extensions<0..2^16-1>;
+     };
+ } ServerHello;
+ */
+
+struct ServerHello {
+    var serverVersion: ProtocolVersion
+    var random: Random
+    var session_id: SessionID
+    var cipherSuites: [CipherSuite]
+    var compressionMethods: CompressionMethod
+    var extensions: [Extension]
+};
+
+
+
+struct Extension {
+
+    enum ExtensionType: Int {
+        case serverName = 0
+        case maxFragmentLength = 1
+        case clientCertificateURL = 2
+        case trustedCaKeys = 3
+        case truncatedHMAC = 4
+        case statusRequest = 5
+        case supportedGroups = 10
+        case ecPointFormats = 11
+        case signatureAlgorithms = 13
+        case applicationLayerProtocolNegotiation = 16
+        case signedCertificateTimestamp = 18
+        case padding = 21
+        case extendedMasterSecret = 23
+        case supportedVersions = 43
+        case pskKeyExchangeModes = 45
+        case keyShare = 51
+        case renegotiationInfo = 65281
+    }
+    
+    let type: ExtensionType
+    let data: Data // max length: 2^16-1 = 65535
+}
