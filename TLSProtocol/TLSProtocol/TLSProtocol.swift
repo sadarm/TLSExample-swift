@@ -9,14 +9,14 @@
 import Foundation
 
 //ProtocolVersion version = { 3, 3 };     /* TLS v1.2*/
-struct ProtocolVersion {
-    var major: UInt8
-    var minor: UInt8
+public struct ProtocolVersion {
+    public var major: UInt8
+    public var minor: UInt8
 }
 
-struct Random {
-    var gmt_unix_time: uint32
-    var random_bytes: [UInt8] = [UInt8](repeating: 0, count: 28)
+public struct Random {
+    public var gmt_unix_time: uint32
+    public var random_bytes: [UInt8] = [UInt8](repeating: 0, count: 28)
 }
 
 
@@ -57,14 +57,14 @@ struct Random {
 //} GenericStreamCipher;
 
 
-typealias SessionID = String
+public typealias SessionID = String
 //typealias CompressionMethod = uint8
 //let CompressionMethod_NULL: CompressionMethod = 0
 
-struct CompressionMethod {
+public struct CompressionMethod {
     let rawValue: UInt8
     
-    static let NULL = CompressionMethod(rawValue: 0)
+    public static let NULL = CompressionMethod(rawValue: 0)
 }
 
 /*
@@ -82,13 +82,13 @@ struct CompressionMethod {
      };
  } ClientHello;
  */
-struct ClientHello {
-    var clientVersion: ProtocolVersion
-    var random: Random
-    var sessionID: SessionID
-    var cipherSuites: [CipherSuite]
-    var compressionMethods: CompressionMethod
-    var extensions: [Extension]
+public struct ClientHello {
+    public var clientVersion: ProtocolVersion
+    public var random: Random
+    public var sessionID: SessionID
+    public var cipherSuites: [CipherSuite]
+    public var compressionMethods: CompressionMethod
+    public var extensions: [Extension]
 };
 
 /*
@@ -107,20 +107,20 @@ struct ClientHello {
  } ServerHello;
  */
 
-struct ServerHello {
-    var serverVersion: ProtocolVersion
-    var random: Random
-    var session_id: SessionID
-    var cipherSuites: [CipherSuite]
-    var compressionMethods: CompressionMethod
-    var extensions: [Extension]
+public struct ServerHello {
+    public var serverVersion: ProtocolVersion
+    public var random: Random
+    public var session_id: SessionID
+    public var cipherSuites: [CipherSuite]
+    public var compressionMethods: CompressionMethod
+    public var extensions: [Extension]
 };
 
 
 
-struct Extension {
+public struct Extension {
 
-    enum ExtensionType: Int {
+    public enum ExtensionType: Int {
         case serverName = 0
         case maxFragmentLength = 1
         case clientCertificateURL = 2
@@ -140,11 +140,11 @@ struct Extension {
         case renegotiationInfo = 65281
     }
     
-    let type: ExtensionType
-    let data: Data // max length: 2^16-1 = 65535
+    public let type: ExtensionType
+    public let data: Data // max length: 2^16-1 = 65535
 }
 
-enum HashAlgorithm: Int {
+public enum HashAlgorithm: Int {
     case none = 0
     case md5 = 1
     case sha1 = 2
@@ -154,14 +154,14 @@ enum HashAlgorithm: Int {
     case sha512 = 6
 }
 
-enum SignatureAlgorithm: Int {
+public enum SignatureAlgorithm: Int {
     case anonymous = 0
     case rsa = 1
     case dsa = 2
     case ecdsa = 3
 }
 
-struct SignatureAndHashAlgorithm {
+public struct SignatureAndHashAlgorithm {
     let hash: HashAlgorithm
     let signature: SignatureAlgorithm
 }

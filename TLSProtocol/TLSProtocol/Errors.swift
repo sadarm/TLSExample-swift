@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum TLSProtocolError: Error {
+public enum TLSProtocolError: Error {
     case outOfRange
     case invalidEncoding
 }
