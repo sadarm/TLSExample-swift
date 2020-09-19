@@ -10,6 +10,7 @@
 		AD3759D42515AAAB00A41681 /* TLSProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = AD3759D22515AAAB00A41681 /* TLSProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AD3759DB2515AAE700A41681 /* TLSProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3759DA2515AAE700A41681 /* TLSProtocol.swift */; };
 		AD3759DD2515AB9E00A41681 /* CipherSuites.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3759DC2515AB9E00A41681 /* CipherSuites.swift */; };
+		AD3759DF2515D4F300A41681 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3759DE2515D4F300A41681 /* Errors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,6 +19,7 @@
 		AD3759D32515AAAB00A41681 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AD3759DA2515AAE700A41681 /* TLSProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLSProtocol.swift; sourceTree = "<group>"; };
 		AD3759DC2515AB9E00A41681 /* CipherSuites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CipherSuites.swift; sourceTree = "<group>"; };
+		AD3759DE2515D4F300A41681 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 				AD3759DA2515AAE700A41681 /* TLSProtocol.swift */,
 				AD3759D32515AAAB00A41681 /* Info.plist */,
 				AD3759DC2515AB9E00A41681 /* CipherSuites.swift */,
+				AD3759DE2515D4F300A41681 /* Errors.swift */,
 			);
 			path = TLSProtocol;
 			sourceTree = "<group>";
@@ -139,6 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD3759DB2515AAE700A41681 /* TLSProtocol.swift in Sources */,
+				AD3759DF2515D4F300A41681 /* Errors.swift in Sources */,
 				AD3759DD2515AB9E00A41681 /* CipherSuites.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
