@@ -143,3 +143,25 @@ struct Extension {
     let type: ExtensionType
     let data: Data // max length: 2^16-1 = 65535
 }
+
+enum HashAlgorithm: Int {
+    case none = 0
+    case md5 = 1
+    case sha1 = 2
+    case sha224 = 3
+    case sha256 = 4
+    case sha384 = 5
+    case sha512 = 6
+}
+
+enum SignatureAlgorithm: Int {
+    case anonymous = 0
+    case rsa = 1
+    case dsa = 2
+    case ecdsa = 3
+}
+
+struct SignatureAndHashAlgorithm {
+    let hash: HashAlgorithm
+    let signature: SignatureAlgorithm
+}
