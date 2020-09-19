@@ -12,6 +12,13 @@ import Foundation
 public struct ProtocolVersion {
     public var major: UInt8
     public var minor: UInt8
+    
+    public init(major: UInt8, minor: UInt8) {
+        self.major = major
+        self.minor = minor
+    }
+    
+    public static let TLS_1_2 = ProtocolVersion(major: 3, minor: 3)
 }
 
 public struct Random {
