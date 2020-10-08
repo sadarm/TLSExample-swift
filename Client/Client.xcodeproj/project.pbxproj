@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		AD3759AC25159BA300A41681 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3759AB25159BA300A41681 /* main.swift */; };
-		AD3759E22515E4B400A41681 /* TLSProtocol.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD3759E12515E4B400A41681 /* TLSProtocol.framework */; };
+		ADDCEB3D251605DF0006237C /* TLSProtocol.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD3759E12515E4B400A41681 /* TLSProtocol.framework */; };
+		ADDCEB3E251605E40006237C /* TLSProtocol.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD3759E12515E4B400A41681 /* TLSProtocol.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -21,12 +22,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		ADDCEB3C251605CF0006237C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				ADDCEB3E251605E40006237C /* TLSProtocol.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		AD3759A825159BA300A41681 /* Client */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Client; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD3759AB25159BA300A41681 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		AD3759E12515E4B400A41681 /* TLSProtocol.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TLSProtocol.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADDCEB3F251607630006237C /* Client.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Client.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,7 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD3759E22515E4B400A41681 /* TLSProtocol.framework in Frameworks */,
+				ADDCEB3D251605DF0006237C /* TLSProtocol.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +74,7 @@
 		AD3759AA25159BA300A41681 /* Client */ = {
 			isa = PBXGroup;
 			children = (
+				ADDCEB3F251607630006237C /* Client.entitlements */,
 				AD3759AB25159BA300A41681 /* main.swift */,
 			);
 			path = Client;
@@ -84,6 +98,7 @@
 				AD3759A425159BA300A41681 /* Sources */,
 				AD3759A525159BA300A41681 /* Frameworks */,
 				AD3759A625159BA300A41681 /* CopyFiles */,
+				ADDCEB3C251605CF0006237C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -255,9 +270,12 @@
 		AD3759B025159BA300A41681 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = A2YJ9ZX2DS;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sadarm.Client;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -266,9 +284,12 @@
 		AD3759B125159BA300A41681 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Client/Client.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = A2YJ9ZX2DS;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sadarm.Client;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};

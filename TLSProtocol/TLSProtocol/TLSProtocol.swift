@@ -19,7 +19,9 @@ public struct ProtocolVersion {
     }
     
     public static let TLS_1_0 = ProtocolVersion(major: 3, minor: 1)
+    public static let TLS_1_1 = ProtocolVersion(major: 3, minor: 2)
     public static let TLS_1_2 = ProtocolVersion(major: 3, minor: 3)
+    public static let TLS_1_3 = ProtocolVersion(major: 3, minor: 4)
 }
 
 public struct Random {
@@ -274,95 +276,3 @@ public struct ServerHello {
     }
 };
 
-
-
-public protocol Extension {
-    var type: ExtensionType { get }
-    var bytes: [UInt8] { get }
-}
-
-public enum ExtensionType: Int {
-    case serverName = 0
-    case maxFragmentLength = 1
-    case clientCertificateURL = 2
-    case trustedCaKeys = 3
-    case truncatedHMAC = 4
-    case statusRequest = 5
-    case supportedGroups = 10
-    case ecPointFormats = 11
-    case signatureAlgorithms = 13
-    case applicationLayerProtocolNegotiation = 16
-    case signedCertificateTimestamp = 18
-    case padding = 21
-    case extendedMasterSecret = 23
-    case supportedVersions = 43
-    case pskKeyExchangeModes = 45
-    case keyShare = 51
-    case renegotiationInfo = 65281
-}
-
-public enum HashAlgorithm: Int {
-    case none = 0
-    case md5 = 1
-    case sha1 = 2
-    case sha224 = 3
-    case sha256 = 4
-    case sha384 = 5
-    case sha512 = 6
-}
-
-public enum SignatureAlgorithm: Int {
-    case anonymous = 0
-    case rsa = 1
-    case dsa = 2
-    case ecdsa = 3
-}
-
-public struct SignatureAndHashAlgorithm {
-    let hash: HashAlgorithm
-    let signature: SignatureAlgorithm
-    
-    public init(_ hash: HashAlgorithm, _ signature: SignatureAlgorithm) {
-        self.hash = hash
-        self.signature = signature
-    }
-}
-
-public struct SignatureAlgorithms: Extension {
-    public let type: ExtensionType = .signatureAlgorithms
-    public let signatureAndHashAlgorithms: [SignatureAndHashAlgorithm]
-    
-    public init(_ signatureAndHashAlgorithms: [SignatureAndHashAlgorithm]) {
-        self.signatureAndHashAlgorithms = signatureAndHashAlgorithms
-    }
-    
-    public var bytes: [UInt8] {
-        var buffer: [UInt8] = []
-        var type = UInt16(self.type.rawValue).bigEndian
-        withUnsafeBytes(of: &type) { (type) -> Void in
-            buffer.append(contentsOf: type.bindMemory(to: UInt8.self))
-        }
-        
-        var algorithms: [UInt8] = []
-        
-        self.signatureAndHashAlgorithms.forEach {
-            algorithms.append(UInt8($0.hash.rawValue))
-            algorithms.append(UInt8($0.signature.rawValue))
-        }
-        
-        var body: [UInt8] = []
-        var lengthOfAlgorithms: UInt16 = UInt16(algorithms.count).bigEndian
-        withUnsafeBytes(of: &lengthOfAlgorithms) { (lengthOfAlgorithms) -> Void in
-            body.append(contentsOf: lengthOfAlgorithms.bindMemory(to: UInt8.self))
-        }
-        body.append(contentsOf: algorithms)
-        
-        var length: UInt16 = UInt16(body.count).bigEndian
-        withUnsafeBytes(of: &length) { (length) -> Void in
-            buffer.append(contentsOf: length.bindMemory(to: UInt8.self))
-        }
-        
-        buffer.append(contentsOf: body)
-        return buffer
-    }
-}

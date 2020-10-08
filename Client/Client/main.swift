@@ -13,8 +13,9 @@ let fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)
 
 assert(fd != -1, "Error creating socket: " + POSIXErrorCode(rawValue: errno).debugDescription)
 
-let hostname = "google.com".data(using: .ascii)!
-let hostent = hostname.withUnsafeBytes { (buffer) -> hostent in
+let hostname = "www.google.com"
+
+let hostent = hostname.suffix(from: hostname.index(after: hostname.firstIndex(of: ".")!)).data(using: .ascii)!.withUnsafeBytes { (buffer) -> hostent in
     let pointer = buffer.bindMemory(to: Int8.self).baseAddress!
     return gethostbyname(pointer)!.pointee
 }
@@ -46,33 +47,59 @@ let result = withUnsafePointer(to: &serverAddr) { (pointer) -> Int32 in
 
 assert(-1 != result, "Error connecting to host: " + POSIXErrorCode(rawValue: errno).debugDescription)
 
+var extensions: [Extension] = []
+
+extensions.append(ServerNameList([ServerName(.hostName, hostname)]))
+let signatureAlgorithms = SignatureAlgorithms([SignatureAndHashAlgorithm(.sha256, .ecdsa),
+                                               SignatureAndHashAlgorithm(.sha256, .rsa),
+                                               SignatureAndHashAlgorithm(.rsae_sha256, .rsa_pss),
+                                               SignatureAndHashAlgorithm(.sha384, .ecdsa),
+                                               SignatureAndHashAlgorithm(.sha1, .ecdsa),
+                                               SignatureAndHashAlgorithm(.sha384, .rsa_pss),
+                                               SignatureAndHashAlgorithm(.sha384, .rsa)])
+extensions.append(signatureAlgorithms)
+//extensions.append(RenegotiationInfo())
+//extensions.append(ApplicationLayerProtocolNegotiation(alpnStrings: ["h2", "http/1.1"]))
+//extensions.append(SupportedVersions(supportedVersions: [.TLS_1_0, .TLS_1_1, .TLS_1_2, .TLS_1_3]))
+//extensions.append(NamedGroupList(groups: [.x25519, .secp256r1, .secp384r1, .secp521r1]))
+//extensions.append(PskKeyExchangeModes())
+extensions.append(SessionTicket())
+extensions.append(Padding(length: 302))
+
 var hello = ClientHello(ProtocolVersion.TLS_1_2,
                         Random(),
                         nil,
-                        [.TLS_DH_anon_WITH_3DES_EDE_CBC_SHA,
-                         .TLS_DH_anon_WITH_AES_128_CBC_SHA,
-                         .TLS_DH_anon_WITH_AES_128_CBC_SHA256,
-                         .TLS_DH_anon_WITH_AES_256_CBC_SHA,
-                         .TLS_DH_anon_WITH_AES_256_CBC_SHA256,
-                         .TLS_DH_anon_WITH_RC4_128_MD5,
-                         .TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA,
-                         .TLS_DH_DSS_WITH_AES_128_CBC_SHA,
-                         .TLS_DH_DSS_WITH_AES_128_CBC_SHA256,
-                         .TLS_DH_DSS_WITH_AES_256_CBC_SHA,
-                         .TLS_DH_DSS_WITH_AES_256_CBC_SHA256,
-                         .TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA,
-                         .TLS_DH_RSA_WITH_AES_128_CBC_SHA,
-                         .TLS_DH_RSA_WITH_AES_128_CBC_SHA256,
-                         .TLS_DH_RSA_WITH_AES_256_CBC_SHA,
-                         .TLS_DH_RSA_WITH_AES_256_CBC_SHA256,
-                         .TLS_DHE_DSS_WITH_AES_256_CBC_SHA,
-                         .TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA],
+                        [.TLS_AES_128_GCM_SHA256,
+                         .TLS_AES_256_GCM_SHA384,
+                         .TLS_CHACHA20_POLY1305_SHA256,
+                         .TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+                         .TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                         .TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,
+                         .TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,
+                         .TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
+                         .TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
+                         .TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+                         .TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+                         .TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                         .TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,
+                         .TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+                         .TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+                         .TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+                         .TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+                         .TLS_RSA_WITH_AES_256_GCM_SHA384,
+                         .TLS_RSA_WITH_AES_128_GCM_SHA256,
+                         .TLS_RSA_WITH_AES_256_CBC_SHA256,
+                         .TLS_RSA_WITH_AES_128_CBC_SHA256,
+                         .TLS_RSA_WITH_AES_256_CBC_SHA,
+                         .TLS_RSA_WITH_AES_128_CBC_SHA,
+                         .TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,
+                         .TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA,
+                         .TLS_RSA_WITH_3DES_EDE_CBC_SHA],
                         [CompressionMethod.NULL],
-                        [SignatureAlgorithms([SignatureAndHashAlgorithm(.sha256, .ecdsa),
-                        SignatureAndHashAlgorithm(.sha256, .rsa)])])
+                        extensions)
 
 var handshake = Handshake(type: .client_hello).bytes(with: hello)
-var text = TLSPlaintext(type: .handshake, version: .TLS_1_0, fragment: handshake).bytes
+var text = TLSPlaintext(type: .handshake, version: .TLS_1_2, fragment: handshake).bytes
 let countOfSentBytes = send(fd, &text, text.count, 0)
 print("\(countOfSentBytes)")
 
